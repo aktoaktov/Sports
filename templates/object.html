@@ -1,0 +1,89 @@
+<section>
+    <h1>{{ obj.name }}</h1>
+    <h3>{{ obj.mo }}, {{ obj.subject }}</h3>
+
+    <address style="margin-bottom: 8px; display: block">{{ obj.addr }}</address>
+
+    {% if obj.actions %}
+        <div class="act" style="margin-bottom: 8px">
+            {{ obj.actions }}
+            {% if obj.starts %}
+                <span>с {{ obj.starts }}</span>
+            {% endif %}
+            {% if obj.ends %}
+                <span>по {{ obj.ends }}</span>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {% if obj.curator %}
+        <div class="cur" style="margin-bottom: 8px">
+            {{ obj.curator }}
+            (<span>{{ obj.phone }}</span>)
+        </div>
+    {% endif %}
+
+    {% if obj.short_decs %}
+        <p>{{ obj.short_decs[:300] + (obj.short_decs[300:] and '…') }}</p>
+    {% endif %}
+
+    <div id="c">
+        {% for c in comms %}
+            <div>
+                <div>
+                    <span>{{ c[2] }}</span>
+                    {% if c[1] %}
+                        <span>
+                    <span {% if c[1] >= 1 %}class="s"{% endif %}>★</span>
+                    <span {% if c[1] >= 2 %}class="s"{% endif %}>★</span>
+                    <span {% if c[1] >= 3 %}class="s"{% endif %}>★</span>
+                    <span {% if c[1] >= 4 %}class="s"{% endif %}>★</span>
+                    <span {% if c[1] >= 5 %}class="s"{% endif %}>★</span>
+                    </span>
+                    {% endif %}
+                </div>
+                <div>{{ c[3] }}</div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <form id="comments" action="/api/object/{{ obj.id }}/comment" method="post">
+        <input type="text" name="name" placeholder="Введите ваше имя">
+        <div class="star-rating">
+            <div class="star-rating__wrap">
+                <input class="star-rating__input" id="star-rating-5" type="radio" name="rating" value="5">
+                <label class="star-rating__ico fa fa-star-o fa-lg" for="star-rating-5" title="5 out of 5 stars"></label>
+                <input class="star-rating__input" id="star-rating-4" type="radio" name="rating" value="4">
+                <label class="star-rating__ico fa fa-star-o fa-lg" for="star-rating-4" title="4 out of 5 stars"></label>
+                <input class="star-rating__input" id="star-rating-3" type="radio" name="rating" value="3">
+                <label class="star-rating__ico fa fa-star-o fa-lg" for="star-rating-3" title="3 out of 5 stars"></label>
+                <input class="star-rating__input" id="star-rating-2" type="radio" name="rating" value="2">
+                <label class="star-rating__ico fa fa-star-o fa-lg" for="star-rating-2" title="2 out of 5 stars"></label>
+                <input class="star-rating__input" id="star-rating-1" type="radio" name="rating" value="1">
+                <label class="star-rating__ico fa fa-star-o fa-lg" for="star-rating-1" title="1 out of 5 stars"></label>
+            </div>
+        </div>
+        <textarea name="comment" placeholder="Введите ваш комментарий"></textarea>
+        <input type="submit">
+    </form>
+</section>
+<script>
+    $("#comments").submit(function (e) {
+
+        e.preventDefault()
+
+        var form = $(this);
+        var actionUrl = form.attr('action');
+
+        $.ajax({
+            type: "POST",
+            url: actionUrl,
+            data: form.serialize(),
+            success: (d) => {
+                $.get(`/api/object/{{ obj.id }}`, res => {
+                    $('#details').html(res)
+                })
+            }
+        });
+    });
+</script>

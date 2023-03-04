@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" type="text/javascript"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey={{ config['YANDEXMAPS_API'] }}&lang=ru_RU"
+            type="text/javascript"></script>
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/starr.css">
+
+    <script src="/static/showmap.js" type="text/javascript"></script>
+    <script src="/static/tp.js" type="text/javascript"></script>
+    <script src="/static/comments.js" type="text/javascript"></script>
+    <script>$(".tabs").lightTabs(); </script>
+    <link rel="stylesheet" href="/static/map.css">
+{% endblock %}
+
+
+{% block body %}
+    <div id="map" style="width: 100vw; height: 100vh"></div>
+    <div id="details"></div>
+{% endblock %}
